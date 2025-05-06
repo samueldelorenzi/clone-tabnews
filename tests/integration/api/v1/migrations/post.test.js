@@ -19,7 +19,7 @@ test("POST to /api/v1/migrations should return 201", async () => {
   expect(response1Body.length).toBeGreaterThan(0);
 
   const counter = await database.query(
-    "select count(*)::int from pg_migrations;",
+    "select count(*)::int from pg_migrations;"
   );
   expect(counter.rows[0].count).toBe(response1Body.length);
 });
