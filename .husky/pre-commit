@@ -1,0 +1,43 @@
+google_api_key="AIza[0-9A-Za-z_-]{35}"
+stripe_live_key="sk_live_[0-9a-zA-Z]{24}"
+github_token="ghp_[0-9a-zA-Z]{36}"
+aws_secret_key="AWS_SECRET_ACCESS_KEY[^[:space:]]*"
+
+staged_files=$(git diff --cached --name-only --diff-filter=ACM)
+
+found_secret=0
+
+for file in $staged_files; do
+  if file "$file" | grep -q 'binary'; then
+    continue
+  fi
+  if [ "$file" = ".husky/pre-commit" ]; then
+    continue
+  fi
+
+  content=$(git show ":$file")
+
+  if echo "$content" | grep -Eq "$google_api_key"; then
+    echo "🔴 Potencial chave detectada em: $file"
+    found_secret=1
+  fi
+  if echo "$content" | grep -Eq "$stripe_live_key"; then
+    echo "🔴 Potencial chave detectada em: $file"
+    found_secret=1
+  fi
+  if echo "$content" | grep -Eq "$github_token"; then
+    echo "🔴 Potencial chave detectada em: $file"
+    found_secret=1
+  fi
+  if echo "$content" | grep -Eq "$aws_secret_key"; then
+    echo "🔴 Potencial chave detectada em: $file"
+    found_secret=1
+  fi
+done
+
+if [ $found_secret -eq 1 ]; then
+  echo '🟠 Revise suas alterações ou use `git commit -n` para pular a verificação.'
+  exit 1
+else
+  exit 0
+fi
