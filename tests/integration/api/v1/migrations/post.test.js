@@ -25,7 +25,7 @@ describe("POST /api/v1/migrations", () => {
         expect(response1Body.length).toBeGreaterThan(0);
 
         const counter = await database.query(
-          "select count(*)::int from pg_migrations;",
+          "select count(*)::int from pgmigrations;",
         );
         expect(counter.rows[0].count).toBe(response1Body.length);
       });
