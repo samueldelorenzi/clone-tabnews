@@ -35,7 +35,7 @@ describe("GET /api/v1/users/[username]", () => {
         id: response2Body.id,
         username: "ExactCase",
         email: "exact.case@devlogging.com.br",
-        password: "password",
+        password: response2Body.password,
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,
       });
@@ -71,7 +71,7 @@ describe("GET /api/v1/users/[username]", () => {
         id: response2Body.id,
         username: "CaseMismatch",
         email: "case.mismatch@devlogging.com.br",
-        password: "password",
+        password: response2Body.password,
         created_at: response2Body.created_at,
         updated_at: response2Body.updated_at,
       });
@@ -81,9 +81,9 @@ describe("GET /api/v1/users/[username]", () => {
       expect(Date.parse(response2Body.updated_at)).not.toBe(NaN);
     });
 
-    test("With non existant username", async () => {
+    test("With non existent username", async () => {
       const response = await fetch(
-        "http://localhost:3000/api/v1/users/NonExistantUser",
+        "http://localhost:3000/api/v1/users/NonExistentUser",
       );
       expect(response.status).toBe(404);
 
